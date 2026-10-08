@@ -58,7 +58,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: xerox-3025-print-plugin-${{ github.ref_name }}.apk
+          files: xerox-3020-3025-print-plugin-${{ github.ref_name }}.apk
           generate_release_notes: true
 
       - name: Cleanup keystore
