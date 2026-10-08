@@ -1,0 +1,241 @@
+# Xerox 3020/3025 Android Print Plugin — Project Spec
+
+## Overview
+
+A custom Android PrintService plugin that enables direct printing and scanning from Android to Xerox Phaser 3020 and WorkCentre 3025 devices over local Wi-Fi, with zero cloud involvement and zero third-party dependencies.
+
+## Problem Statement
+
+Xerox Phaser 3020 and WorkCentre 3025 do not support Android printing out of the box:
+- Xerox Print Service Plugin → "Printer blocked / Document failed to print"
+- Mopria Print Service → "Printer unsupported"
+- Google Cloud Print → discontinued in 2021
+
+The printers work fine from Windows and macOS (via CUPS/AirPrint).
+
+## Printer Details
+
+| Property | Value |
+|---|---|
+| Models | Xerox Phaser 3020 (Print only), Xerox WorkCentre 3025 (Print & Scan) |
+| Supported formats | `image/urf`, `application/x-QPDL` |
+| Unsupported | PCL, PostScript, raw PDF, plain text |
+| IPP | `ipp://{ip}/ipp/print` (port 631) |
+| AirPrint | Yes (URF via IPP) |
+| Color | Monochrome only |
+| Device ID | `MFG:Xerox;CMD:SPL,URF;MDL:WorkCentre 3025` / `Phaser 3020` |
+
+### Scanner Capabilities (confirmed via WSD probe on WorkCentre 3025)
+
+| Property | Value |
+|---|---|
+| Protocol | WSD (Web Services for Devices) on port 8018 |
+| Endpoint | `http://<ip>:8018/wsd/scan` |
+| Formats | JPEG (`jfif`), TIFF (`tiff-single-uncompressed`) |
+| Resolutions | 75, 100, 150, 200, 300 DPI |
+| Color modes | Black & White, Grayscale 8-bit, RGB 24-bit |
+| Source | Flatbed platen only (no ADF) |
+| Max scan area | 8503 x 11732 (thousandths of inch, ~A4) |
+| eSCL/AirScan | Not supported (HTTP 404) |
+
+## Technical Approach
+
+### Print Pipeline
+
+1. Android renders the document to **PDF**
+2. Plugin copies PDF to temp file, opens with `PdfRenderer`
+3. Each page is rendered to an **ARGB_8888 Bitmap** at 600 DPI (4960×7015 pixels for A4)
+4. Bitmaps are converted to **8-bit grayscale** and encoded as **URF** (Universal Raster Format)
+5. URF data is wrapped in an **IPP Print-Job** request and sent via HTTP POST to port 631
+
+### URF Format
+
+```
+File header:  "UNIRAST\0" (8 bytes) + uint32_be page_count (4 bytes)
+
+Per page:
+  Page header (32 bytes):
+    [0]  bitsPerPixel = 8
+    [1]  colorSpace = 0 (W8/grayscale)
+    [2]  duplex = 1 (one-sided)
+    [3]  quality = 0 (default)
+    [4-11]  reserved (zeros)
+    [12-15] width (uint32 BE) = 4960
+    [16-19] height (uint32 BE) = 7015
+    [20-23] resolution (uint32 BE) = 600
+    [24-31] reserved (zeros)
+
+  Raster data (CUPS PackBits compression):
+    Per scanline:
+      1 byte: line repeat count (0 = no repeat, N = repeat N more times)
+      Compressed line bytes:
+        0-127:   repeat next byte (N+1) times
+        128:     no-op (never emitted by encoder)
+        129-255: next (257-N) bytes are literal data
+```
+
+### IPP Protocol
+
+```
+POST /ipp/print HTTP/1.1
+Host: {printer_ip}
+Content-Type: application/ipp
+Content-Length: {size}
+
+IPP 1.1 Print-Job request:
+  attributes-charset: utf-8
+  attributes-natural-language: en
+  printer-uri: ipp://{ip}/ipp/print
+  requesting-user-name: android-plugin
+  job-name: {document_name}
+  document-format: image/urf
+  [end-of-attributes]
+  [URF document data]
+```
+
+### WSD Scan Protocol
+
+The scanner uses WSD (Web Services for Devices) via SOAP/XML on port 8018.
+
+**Key implementation detail:** The `Content-Type` header must include the `action=` parameter:
+```
+Content-Type: application/soap+xml; charset=utf-8; action="{action-uri}"
+```
+Without this, the printer returns HTTP 500. The `wsa:Action` SOAP header alone is not sufficient.
+
+**WS-Addressing namespace:** `http://schemas.xmlsoap.org/ws/2004/08/addressing` (2004 version, NOT 2005).
+
+**Scan flow:**
+1. `GetScannerElements` — query status and capabilities
+2. `CreateScanJob` — send scan settings, returns `JobId` and `JobToken`
+3. `RetrieveImage` — blocks until scan completes, returns MTOM/MIME response with JPEG data
+
+**MTOM response format:**
+```
+--_DPWS_v1.0_MimeBoundary_WSD\r\n
+Content-Type: application/xop+xml\r\n
+\r\n
+[SOAP XML envelope]\r\n
+--_DPWS_v1.0_MimeBoundary_WSD\r\n
+Content-Type: image/jpeg\r\n
+\r\n
+[JPEG binary data]
+--_DPWS_v1.0_MimeBoundary_WSD--
+```
+
+## Project Structure
+
+```
+app/src/main/
+├── AndroidManifest.xml
+├── assets/
+│   └── test_page.urf              # Pre-rendered URF test page
+├── java/com/xeroxurf/printplugin/
+│   ├── XeroxURFPrintService.java   # Core PrintService (PDF→URF→IPP)
+│   ├── SettingsActivity.java       # Config UI, network test, test page
+│   ├── CentreWareActivity.java     # Full-screen WebView for printer web management SWS
+│   ├── IppClient.java             # IPP protocol implementation
+│   ├── UrfEncoder.java            # Bitmap→URF encoder with PWG compression
+│   ├── WsdScanClient.java         # WSD/SOAP scanner client
+│   ├── ScanActivity.java          # Scan UI with preview/save/share
+│   ├── PrintLog.java              # Ring-buffer debug logger
+│   ├── PrintJobHistory.java       # Job history persistence (SharedPreferences/JSON)
+│   └── JobHistoryActivity.java    # Job history UI (RecyclerView)
+└── res/
+    ├── drawable/
+    │   ├── ic_printer.xml
+    |	└── ic_github.xml
+    ├── drawable-night/
+    |	└── ic_github.xml
+    ├── layout/
+    │   ├── activity_settings.xml
+    │   ├── activity_scan.xml
+    │   ├── activity_centreware.xml
+    │   ├── activity_job_history.xml
+    │   └── item_job_history.xml
+    ├── values/
+    │   ├── strings.xml (and 19 localized values-* directories)
+    │   └── themes.xml
+    └── xml/
+        ├── preferences.xml
+        ├── printservice.xml
+        └── file_paths.xml
+```
+
+## Key Components
+
+### XeroxURFPrintService.java
+- Extends `android.printservice.PrintService`
+- `onPrintJobQueued()`: extracts job info on main thread, calls `printJob.start()`, spawns background thread
+- `processPrintJob()`: PDF → PdfRenderer → Bitmap → UrfEncoder → IppClient
+- All `PrintJob` lifecycle methods (`complete()`, `fail()`, `cancel()`) called via `mainHandler.post()` (required by Android framework)
+- Notification channel for print job progress/completion
+- Records job history on completion/failure
+
+### UrfEncoder.java
+- Converts ARGB_8888 Bitmap to 8-bit grayscale
+- Encodes as URF with PWG raster compression
+- Supports line repeat optimization for identical scanlines
+
+### IppClient.java
+- Builds IPP Print-Job requests
+- Sends via HTTP POST to port 631
+- Parses IPP response status codes
+
+### WsdScanClient.java
+- WSD/SOAP client for scanner operations on port 8018
+- `getScannerStatus()`: queries scanner state (Idle/Processing/Stopped)
+- `getScannerCapabilities()`: queries resolutions, color modes, formats
+- `createScanJob()`: initiates scan with settings, returns JobId + JobToken
+- `retrieveImage()`: blocks until scan completes, extracts JPEG from MTOM/MIME response
+- Handles SOAP envelope construction, WS-Addressing headers, and Content-Type action parameter
+
+### ScanActivity.java
+- Scan UI with resolution/color mode spinners, scan button, image preview
+- Save to Downloads (MediaStore on Android 10+, direct file on older)
+- Share via Android intent (FileProvider for URI permissions)
+
+### CentreWareActivity.java
+- Full-screen WebView module for accessing the printer's CentreWare Internet Services (SWS) management interface at `http://{Printer IP}/sws/index.html`.
+- Supports JavaScript, zoom controls, and history back-press navigation.
+
+### SettingsActivity.java
+- Multi-model selection dialog (Phaser 3020 / WorkCentre 3025) with dynamic isolation.
+- Per-app language preferences (`AppCompatDelegate`) supporting 20 languages.
+- Network connectivity test (DNS, ping, TCP 9100, IPP 631)
+- Test page printing (pre-rendered URF via IPP)
+- Print via Android Framework (opens Android print dialog with test PDF)
+- Standalone Scan Document action card (WorkCentre 3025 mode)
+- Job history viewer
+- Debug log viewer with copy/clear
+
+### PrintJobHistory.java
+- Stores last 50 jobs in SharedPreferences as JSON
+- Records: job name, timestamp, status, detail, page count
+
+### PrintLog.java
+- In-memory ring buffer (500 entries) wrapping android.util.Log
+- Thread-safe, exportable as text
+
+## Build Configuration
+
+- `compileSdk`: 34, `minSdk`: 26, `targetSdk`: 34
+- Java: 17, Gradle: 8.4, AGP: 8.2.0
+- Dependencies: appcompat, preference, material (all AndroidX)
+
+## Permissions
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+```
+
+## Privacy & Security
+
+- No internet connections of any kind
+- No analytics, telemetry, or crash reporting
+- No accounts or registration
+- All traffic on local network only
+- Settings stored locally via SharedPreferences

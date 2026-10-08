@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.PrintPlugin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#D9534F</item>
+        <item name="colorPrimaryVariant">#C9302C</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#E06D6D</item>
+        <item name="colorSecondaryVariant">#B52B2B</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorAccent">#D9534F</item>
+        <item name="colorControlActivated">#D9534F</item>
+        <item name="android:colorBackground">#202124</item>
+        <item name="android:windowBackground">#202124</item>
+        <item name="colorSurface">#2D2E31</item>
+        <item name="android:statusBarColor">#202124</item>
+        <item name="android:navigationBarColor">#202124</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

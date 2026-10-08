@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/colorBackground">
+
+    <!-- Pinned Top Header Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:elevation="4dp"
+        android:background="?android:attr/colorBackground">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_printer"
+            app:tint="?attr/colorPrimary"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textSize="20sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeStepGranularity="1sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary" />
+    </LinearLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- CONFIGURATION SECTION -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_configuration"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorSecondary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Printer Model Item -->
+                    <LinearLayout
+                        android:id="@+id/item_printer_model"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_printer"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_printer_model"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:id="@+id/text_printer_model"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Phaser 3020/3025"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/text_printer_model_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="WorkCentre 3025"
+                            android:textSize="14sp"
+                            android:textColor="?attr/colorPrimary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Launch CentreWare Item -->
+                    <LinearLayout
+                        android:id="@+id/item_centreware"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_manage"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp"
+                            android:contentDescription="@null" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_centreware"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_centreware_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- App Language Item -->
+                    <LinearLayout
+                        android:id="@+id/item_app_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_compass"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_app_language"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_app_language_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/text_app_language_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="English"
+                            android:textSize="14sp"
+                            android:textColor="?android:attr/textColorPrimary" />
+                    </LinearLayout>
+
+                    <!-- Discover Printers Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_discover"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_discover_printers"
+                        android:textAllCaps="false"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        app:icon="@android:drawable/ic_menu_search"
+                        app:iconTint="?attr/colorPrimary"
+                        app:cornerRadius="16dp" />
+
+                    <!-- Display Name Item -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pref_printer_name"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_printer_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textNoSuggestions"
+                            android:autofillHints=""
+                            android:importantForAutofill="no"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Printer IP Address Item -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pref_printer_ip"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_printer_ip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- SCAN DOCUMENT ACTION CARD (Visible only for WorkCentre 3025) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_scan_doc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorSecondary">
+
+                <LinearLayout
+                    android:id="@+id/item_scan_doc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_camera"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pref_scan_document"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pref_scan_document_summary"
+                            android:textSize="12sp"
+                            android:textColor="?android:attr/textColorSecondary"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TEST & DIAGNOSTICS SECTION -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_diagnostics"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorSecondary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Test Network Connection -->
+                    <LinearLayout
+                        android:id="@+id/item_test_network"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_send"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_test_network"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_test_network_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Print Test Page -->
+                    <LinearLayout
+                        android:id="@+id/item_print_test_page"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_agenda"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_print_test_page"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_print_test_page_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Print via Android Framework -->
+                    <LinearLayout
+                        android:id="@+id/item_print_via_android"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_view"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_print_via_android"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_print_via_android_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Print Job History -->
+                    <LinearLayout
+                        android:id="@+id/item_job_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_recent_history"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_job_history"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_job_history_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- View Debug Logs -->
+                    <LinearLayout
+                        android:id="@+id/item_view_logs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingVertical="12dp"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            app:tint="?attr/colorPrimary"
+                            android:layout_marginEnd="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_view_logs"
+                                android:textSize="16sp"
+                                android:textColor="?android:attr/textColorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pref_view_logs_summary"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- GitHub Repository Button -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/item_github"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorSecondary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingVertical="20dp"
+                    android:paddingHorizontal="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_github"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_github"
+                        android:contentDescription="@string/pref_github_summary" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- SETUP INSTRUCTIONS SECTION -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_category_instructions"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="8dp"
+                android:paddingStart="4dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorSecondary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_info_title"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/text_setup_instructions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_info_summary"
+                        android:textSize="13sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:lineSpacingMultiplier="1.2" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

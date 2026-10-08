@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:usesCleartextTraffic="true"
+        android:icon="@drawable/ic_printer"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_printer"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PrintPlugin">
+
+        <!-- Main settings activity -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Job history activity -->
+        <activity
+            android:name=".JobHistoryActivity"
+            android:exported="false"
+            android:label="@string/job_history_title" />
+
+        <!-- Scan activity -->
+        <activity
+            android:name=".ScanActivity"
+            android:exported="false"
+            android:label="@string/scan_title" />
+
+        <!-- CentreWare activity -->
+        <activity
+            android:name=".CentreWareActivity"
+            android:exported="false"
+            android:label="@string/centreware_title" />
+
+        <!-- FileProvider for sharing scanned images -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- The PrintService itself -->
+        <service
+            android:name=".XeroxURFPrintService"
+            android:exported="true"
+            android:permission="android.permission.BIND_PRINT_SERVICE">
+            <intent-filter>
+                <action android:name="android.printservice.PrintService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.printservice"
+                android:resource="@xml/printservice" />
+        </service>
+
+        <!-- Auto-store locales for AndroidX AppCompat per-app language support -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
+    </application>
+
+</manifest>
